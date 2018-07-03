@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NDesk.Options;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -12,13 +13,15 @@ namespace FileTracker
 
         static void Main(string[] args)
         {
-            _config = new ConfigModel
+            _config = new ConfigModel();
+
+            var p = new OptionSet()
             {
-                //PathToTool = args[0],
-                FolderToBeTracked = args[0],
-                FullPathToLogFile = args[1],
-                SizeOfLogDump = 500
+                { "target=", v => _config.FolderToBeTracked = v },
+                { "log=", v => _config.FullPathToLogFile = v },
+                { "dumpsize=", v => _config.SizeOfLogDump = int.Parse(v) }
             };
+
             _logBuffer = new List<string>();
             FileSystemWatcher watcher = new FileSystemWatcher(_config.FolderToBeTracked);
 
